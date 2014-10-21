@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading.Tasks;
 
 namespace PandaDoc
 {
@@ -59,6 +61,29 @@ namespace PandaDoc
                 httpClient.DefaultRequestHeaders.Clear();
                 httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + bearerToken.AccessToken);
             }
+        }
+
+        public async Task<PandaDocHttpResponse<BearerToken>> Login(string username, string password)
+        {
+            if (username == null) throw new ArgumentNullException("username");
+            if (password == null) throw new ArgumentNullException("password");
+
+            var values = new Dictionary<string, string>
+            {
+                {"grant_type", "password"},
+                {"username", username},
+                {"password", password},
+                {"client_id", settings.ClientId},
+                {"client_secret", settings.ClientSecret}
+            };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.BaseUri + "/oauth2/access_token", content);
+
+            PandaDocHttpResponse<BearerToken> response = await httpResponse.ToPandaDocResponseAsync<BearerToken>();
+
+            return response;
         }
     }
 }

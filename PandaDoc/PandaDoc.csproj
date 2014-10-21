@@ -52,8 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BearerToken.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="PandaDocHttpClient.cs" />
     <Compile Include="PandaDocHttpClientSettings.cs" />
+    <Compile Include="PandaDocHttpResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

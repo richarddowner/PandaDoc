@@ -85,5 +85,28 @@ namespace PandaDoc.Tests
             var client = new PandaDocHttpClient(settings);
             Assert.Throws<ArgumentNullException>(() => client.BearerToken = null);
         }
+
+        [Test, Ignore("Test hits the PandaDoc API")]
+        public async void Login()
+        {
+            var settings = new PandaDocHttpClientSettings
+            (
+                clientId: "YOUR_CLIENT_ID_HERE",
+                clientSecret: "YOUR_CLIENT_SECRET_HERE"
+            );
+
+            var client = new PandaDocHttpClient(settings);
+
+            PandaDocHttpResponse<BearerToken> login = await client.Login
+            (
+                username: "YOUR_EMAIL_HERE@YOU.COM", 
+                password: "YOUR_PASSWORD"
+            );
+
+            Assert.NotNull(login);
+            Assert.NotNull(login.Value);
+            Assert.NotNull(login.Value.AccessToken);
+            Assert.NotNull(login.Value.RefreshToken);
+        }
     }
 }
