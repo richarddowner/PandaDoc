@@ -9,6 +9,7 @@ namespace PandaDoc
         private PandaDocHttpClientSettings settings;
         private HttpClient httpClient;
         private JsonMediaTypeFormatter jsonFormatter;
+        private BearerToken bearerToken;
 
         public PandaDocHttpClient(PandaDocHttpClientSettings settings)
         {
@@ -44,6 +45,19 @@ namespace PandaDoc
             {
                 if (value == null) throw new ArgumentNullException("value");
                 jsonFormatter = value;
+            }
+        }
+
+        public BearerToken BearerToken
+        {
+            get { return bearerToken; }
+            set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                bearerToken = value;
+
+                httpClient.DefaultRequestHeaders.Clear();
+                httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + bearerToken.AccessToken);
             }
         }
     }
