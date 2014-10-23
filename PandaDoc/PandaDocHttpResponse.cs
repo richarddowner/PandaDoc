@@ -12,6 +12,7 @@ namespace PandaDoc
         public HttpResponseMessage HttpResponse { get; set; }
         public HttpResponseHeaders Headers { get; set; }
         public Dictionary<string, string> Errors { get; set; }
+        public string Content { get; set; }
     }
 
     public class PandaDocHttpResponse<T> : PandaDocHttpResponse

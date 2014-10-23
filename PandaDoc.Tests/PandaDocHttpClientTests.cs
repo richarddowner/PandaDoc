@@ -4,7 +4,9 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using NUnit.Framework;
 using PandaDoc.Models.CreateDocument;
+using PandaDoc.Models.GetDocument;
 using PandaDoc.Models.GetDocuments;
+using PandaDoc.Models.SendDocument;
 
 namespace PandaDoc.Tests
 {
@@ -95,12 +97,13 @@ namespace PandaDoc.Tests
         {
             using (var client = new PandaDocHttpClient())
             {
-                PandaDocHttpResponse<PandaDocBearerToken> bearerToken = await client.Login(username: Username, password: Password);
+                PandaDocHttpResponse<PandaDocBearerToken> response = await client.Login(username: Username, password: Password);
 
-                Assert.NotNull(bearerToken);
-                Assert.NotNull(bearerToken.Value);
-                Assert.NotNull(bearerToken.Value.AccessToken);
-                Assert.NotNull(bearerToken.Value.RefreshToken);
+                Assert.NotNull(response);
+                Assert.NotNull(response.Value);
+                Assert.NotNull(response.Value.AccessToken);
+                Assert.NotNull(response.Value.RefreshToken);
+                Assert.IsTrue(response.IsSuccessStatusCode);
             }
         }
 
@@ -109,10 +112,11 @@ namespace PandaDoc.Tests
         {
             using (PandaDocHttpClient client = await EnsureLoggedIn())
             {
-                PandaDocHttpResponse<GetDocumentsResponse> response = await client.Documents();
+                PandaDocHttpResponse<GetDocumentsResponse> response = await client.GetDocuments();
 
                 Assert.NotNull(response);
                 Assert.NotNull(response.Value);
+                Assert.IsTrue(response.IsSuccessStatusCode);
             }
         }
 
@@ -121,33 +125,75 @@ namespace PandaDoc.Tests
         {
             using (PandaDocHttpClient client = await EnsureLoggedIn())
             {
-                var request = new CreateDocumentRequest
-                {
-                    Name = "Sample Document",
-                    Url = SampleDocUrl,
-                    Recipients = new[]
-                    {
-                        new Models.CreateDocument.Recipient
-                        {
-                            Email = "jake.net@gmail.com",
-                            FirstName = "Jake",
-                            LastName = "Scott",
-                            Role = "u1",
-                        }
-                    },
-                    Fields = new Dictionary<string, Field>
-                    {
-                        {"optId", new Field {Title = "Field 1"}}
-                    }
-                };
+                CreateDocumentRequest request = CreateDocumentRequest();
 
                 PandaDocHttpResponse<CreateDocumentResponse> response = await client.CreateDocument(request);
 
                 Assert.NotNull(response);
                 Assert.NotNull(response.Value);
                 Assert.IsTrue(response.IsSuccessStatusCode);
-
             }
+        }
+
+        [Test]
+        public async void GetDocument()
+        {
+            using (PandaDocHttpClient client = await EnsureLoggedIn())
+            {
+                var createRequest = CreateDocumentRequest();
+                var createResponse = await client.CreateDocument(createRequest);
+
+                PandaDocHttpResponse<GetDocumentResponse> response = await client.GetDocument(createResponse.Value.Uuid);
+                
+                Assert.NotNull(response);
+                Assert.NotNull(response.Value);
+                Assert.IsTrue(response.IsSuccessStatusCode);
+            }
+        }
+
+        [Test]
+        public async void SendDocument()
+        {
+            using (PandaDocHttpClient client = await EnsureLoggedIn())
+            {
+                var createRequest = CreateDocumentRequest();
+                var createResponse = await client.CreateDocument(createRequest);
+
+                var sendRequest = new SendDocumentRequest
+                {
+                    Message = "plz sign doge."
+                };
+
+                PandaDocHttpResponse<SendDocumentResponse> response = await client.SendDocument(createResponse.Value.Uuid, sendRequest);
+                
+                Assert.NotNull(response);
+                Assert.NotNull(response.Value);
+                Assert.IsTrue(response.IsSuccessStatusCode);
+            }
+        }
+
+        private CreateDocumentRequest CreateDocumentRequest()
+        {
+            var request = new CreateDocumentRequest
+            {
+                Name = "Sample Document",
+                Url = SampleDocUrl,
+                Recipients = new[]
+                {
+                    new Models.CreateDocument.Recipient
+                    {
+                        Email = "jake.net@gmail.com",
+                        FirstName = "Jake",
+                        LastName = "Scott",
+                        Role = "u1",
+                    }
+                },
+                Fields = new Dictionary<string, Field>
+                {
+                    {"optId", new Field {Title = "Field 1"}}
+                }
+            };
+            return request;
         }
     }
 }

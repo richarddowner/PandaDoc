@@ -54,6 +54,8 @@
     <Compile Include="Models\CreateDocument\CreateDocumentResponse.cs" />
     <Compile Include="Models\CreateDocument\CreateDocumentRequest.cs" />
     <Compile Include="Models\GetDocuments\GetDocumentsResponse.cs" />
+    <Compile Include="Models\GetDocument\GetDocumentResponse.cs" />
+    <Compile Include="Models\SendDocument\SendDocumentRequest.cs" />
     <Compile Include="PandaDocBearerToken.cs" />
     <Compile Include="PandaDocHttpResponseExtensions.cs" />
     <Compile Include="PandaDocHttpClient.cs" />
@@ -64,9 +66,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\GetDocument\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">

@@ -4,7 +4,9 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using PandaDoc.Models.CreateDocument;
+using PandaDoc.Models.GetDocument;
 using PandaDoc.Models.GetDocuments;
+using PandaDoc.Models.SendDocument;
 
 namespace PandaDoc
 {
@@ -104,7 +106,7 @@ namespace PandaDoc
             return response;
         }
 
-        public async Task<PandaDocHttpResponse<GetDocumentsResponse>> Documents()
+        public async Task<PandaDocHttpResponse<GetDocumentsResponse>> GetDocuments()
         {
             HttpResponseMessage httpResponse = await httpClient.GetAsync(settings.ApiUri + "public/v1/documents");
 
@@ -120,6 +122,26 @@ namespace PandaDoc
             HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.ApiUri + "public/v1/documents", httpContent);
 
             PandaDocHttpResponse<CreateDocumentResponse> response = await httpResponse.ToPandaDocResponseAsync<CreateDocumentResponse>();
+
+            return response;
+        }
+
+        public async Task<PandaDocHttpResponse<GetDocumentResponse>> GetDocument(string uuid)
+        {
+            HttpResponseMessage httpResponse = await httpClient.GetAsync(settings.ApiUri + "public/v1/documents/" + uuid);
+
+            PandaDocHttpResponse<GetDocumentResponse> response = await httpResponse.ToPandaDocResponseAsync<GetDocumentResponse>();
+
+            return response;
+        }
+
+        public async Task<PandaDocHttpResponse<SendDocumentResponse>> SendDocument(string uuid, SendDocumentRequest request)
+        {
+            HttpContent httpContent = new ObjectContent<SendDocumentRequest>(request, JsonFormatter);
+
+            HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.ApiUri + "public/v1/documents/" + uuid + "/send", httpContent);
+
+            PandaDocHttpResponse<SendDocumentResponse> response = await httpResponse.ToPandaDocResponseAsync<SendDocumentResponse>();
 
             return response;
         }

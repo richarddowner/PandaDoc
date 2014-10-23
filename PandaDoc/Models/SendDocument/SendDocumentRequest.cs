@@ -1,9 +1,16 @@
 ﻿using System;
 using Newtonsoft.Json;
+using PandaDoc.Models.GetDocument;
 
-namespace PandaDoc.Models.CreateDocument
+namespace PandaDoc.Models.SendDocument
 {
-    public class CreateDocumentResponse
+    public class SendDocumentRequest
+    {
+        [JsonProperty("message")]
+        public string Message { get; set; }
+    }
+
+    public class SendDocumentResponse
     {
         [JsonProperty("uuid")]
         public string Uuid { get; set; }
@@ -13,6 +20,9 @@ namespace PandaDoc.Models.CreateDocument
 
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        [JsonProperty("recipients")]
+        public Recipient[] Recipients { get; set; }
 
         [JsonProperty("date_created")]
         public DateTime DateCreated { get; set; }

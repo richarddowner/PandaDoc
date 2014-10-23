@@ -39,6 +39,7 @@ namespace PandaDoc
 
             var response = new PandaDocHttpResponse<T>
             {
+                Content = responseContent,
                 IsSuccessStatusCode = httpResponse.IsSuccessStatusCode,
                 StatusCode = httpResponse.StatusCode,
                 Headers = httpResponse.Headers,
