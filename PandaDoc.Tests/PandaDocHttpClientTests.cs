@@ -145,6 +145,8 @@ namespace PandaDoc.Tests
 
                 Assert.NotNull(response);
                 Assert.NotNull(response.Value);
+                Assert.IsTrue(response.IsSuccessStatusCode);
+
             }
         }
     }

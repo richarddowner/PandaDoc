@@ -91,7 +91,8 @@ namespace PandaDoc
                 {"username", username},
                 {"password", password},
                 {"client_id", settings.ClientId},
-                {"client_secret", settings.ClientSecret}
+                {"client_secret", settings.ClientSecret},
+                {"scope", "read+write"}
             };
 
             var content = new FormUrlEncodedContent(values);
@@ -115,7 +116,7 @@ namespace PandaDoc
         public async Task<PandaDocHttpResponse<CreateDocumentResponse>> CreateDocument(CreateDocumentRequest request)
         {
             HttpContent httpContent = new ObjectContent<CreateDocumentRequest>(request, JsonFormatter);
-            
+
             HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.ApiUri + "public/v1/documents", httpContent);
 
             PandaDocHttpResponse<CreateDocumentResponse> response = await httpResponse.ToPandaDocResponseAsync<CreateDocumentResponse>();
