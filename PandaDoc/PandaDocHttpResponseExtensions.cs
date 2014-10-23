@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace PandaDoc
 {
-    public static class Extensions
+    public static class PandaDocHttpResponseExtensions
     {
         public static async Task<PandaDocHttpResponse> ToPandaDocResponseAsync(this HttpResponseMessage httpResponse)
         {
@@ -48,8 +48,7 @@ namespace PandaDoc
 
             if (httpResponse.IsSuccessStatusCode)
             {
-                var value = await httpResponse.Content.ReadAsAsync<T>();
-                response.Value = value;
+                response.Value = await httpResponse.Content.ReadAsAsync<T>();
             }
             else
             {

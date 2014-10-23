@@ -3,12 +3,12 @@
 namespace PandaDoc.Tests
 {
     [TestFixture]
-    public class BearerTokenTests
+    public class PandaDocBearerTokenTests
     {
         [Test]
         public void AccessToken()
         {
-            var token = new BearerToken { AccessToken = "test" };
+            var token = new PandaDocBearerToken { AccessToken = "test" };
             
             Assert.AreEqual("test", token.AccessToken);
         }
@@ -16,7 +16,7 @@ namespace PandaDoc.Tests
         [Test]
         public void RefreshToken()
         {
-            var token = new BearerToken { RefreshToken = "test" };
+            var token = new PandaDocBearerToken { RefreshToken = "test" };
 
             Assert.AreEqual("test", token.RefreshToken);
         }

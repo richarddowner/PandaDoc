@@ -51,8 +51,14 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BearerToken.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Models\Documents.cs" />
+    <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\ModifiedBy.cs" />
+    <Compile Include="Models\Owner.cs" />
+    <Compile Include="Models\Recipient.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="PandaDocBearerToken.cs" />
+    <Compile Include="PandaDocHttpResponseExtensions.cs" />
     <Compile Include="PandaDocHttpClient.cs" />
     <Compile Include="PandaDocHttpClientSettings.cs" />
     <Compile Include="PandaDocHttpResponse.cs" />

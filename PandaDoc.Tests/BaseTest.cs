@@ -1,5 +1,5 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace PandaDoc.Tests
@@ -7,19 +7,19 @@ namespace PandaDoc.Tests
     [TestFixture]
     public abstract class BaseTest
     {
-        protected const string TestClient = "TestClient";
-        protected const string TestSecret = "TestSecret";
-        
-        protected static readonly Uri TestBaseUri = new Uri("https://app.pandadoc.com");
+        protected readonly string Username = ConfigurationManager.AppSettings["pandadoc:username"];
+        protected readonly string Password = ConfigurationManager.AppSettings["pandadoc:password"];
 
-        [SetUp]
-        public void SetUp()
+        protected async Task<PandaDocHttpClient> EnsureLoggedIn()
         {
-            Environment.SetEnvironmentVariable(PandaDocHttpClientSettings.EnvironmentClientIdKey, null);
-            Environment.SetEnvironmentVariable(PandaDocHttpClientSettings.EnvironmentClientSecretKey, null);
+            var settings = new PandaDocHttpClientSettings();
+            var client = new PandaDocHttpClient(settings);
 
-            ConfigurationManager.AppSettings[PandaDocHttpClientSettings.ClientIdKey] = TestClient;
-            ConfigurationManager.AppSettings[PandaDocHttpClientSettings.ClientSecretKey] = TestSecret;
-        } 
+            var login = await client.Login(username: Username, password: Password);
+
+            client.SetBearerToken(login.Value);
+
+            return client;
+        }
     }
 }

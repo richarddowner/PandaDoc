@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class BearerToken : Dictionary<string, string>
+    public class PandaDocBearerToken : Dictionary<string, string>
     {
         public string AccessToken
         {

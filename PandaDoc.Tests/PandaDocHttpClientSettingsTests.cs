@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using NUnit.Framework;
 
 namespace PandaDoc.Tests
@@ -12,45 +11,22 @@ namespace PandaDoc.Tests
         {
             var settings = new PandaDocHttpClientSettings();
 
-            Assert.AreEqual(TestClient, settings.ClientId);
-            Assert.AreEqual(TestSecret, settings.ClientSecret);
-            Assert.AreEqual(TestBaseUri, settings.BaseUri);
+            Assert.NotNull(settings.ClientId);
+            Assert.NotNull(settings.ClientSecret);
+            Assert.NotNull(settings.ApiUri);
+            Assert.NotNull(settings.AuthUri);
         }
 
         [Test]
-        public void UseAppSettingsWithoutClientId()
+        public void UseUserSettings()
         {
-            ConfigurationManager.AppSettings[PandaDocHttpClientSettings.ClientIdKey] = null;
-            Assert.Throws<ArgumentNullException>(() => new PandaDocHttpClientSettings());
-        }
+            var settings = new PandaDocHttpClientSettings("clientid", "clientsecret", new Uri("https://api.test.com"), new Uri("https://auth.test.com"));
 
-        [Test]
-        public void UseAppSettingsWithoutClientSecret()
-        {
-            ConfigurationManager.AppSettings[PandaDocHttpClientSettings.ClientSecretKey] = null;
-            Assert.Throws<ArgumentNullException>(() => new PandaDocHttpClientSettings());
-        }
-
-        [Test]
-        public void UseExplictSettings()
-        {
-            var settings = new PandaDocHttpClientSettings(TestClient, TestSecret);
-
-            Assert.AreEqual(TestClient, settings.ClientId);
-            Assert.AreEqual(TestSecret, settings.ClientSecret);
-            Assert.AreEqual(TestBaseUri, settings.BaseUri);
-        }
-
-        [Test]
-        public void UseEnvironmentSettings()
-        {
-            Environment.SetEnvironmentVariable(PandaDocHttpClientSettings.EnvironmentClientIdKey, "Env-ClientId");
-            Environment.SetEnvironmentVariable(PandaDocHttpClientSettings.EnvironmentClientSecretKey, "Env-ClientSecret");
-
-            var settings = new PandaDocHttpClientSettings();
-
-            Assert.AreEqual("Env-ClientId", settings.ClientId);
-            Assert.AreEqual("Env-ClientSecret", settings.ClientSecret);
+            Assert.AreEqual(settings.ClientId, "clientid");
+            Assert.AreEqual(settings.ClientSecret, "clientsecret");
+            
+            Assert.AreEqual(settings.ApiUri, new Uri("https://api.test.com"));
+            Assert.AreEqual(settings.AuthUri, new Uri("https://auth.test.com"));
         }
     }
 }

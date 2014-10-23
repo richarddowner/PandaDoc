@@ -5,38 +5,18 @@ namespace PandaDoc
 {
     public class PandaDocHttpClientSettings
     {
-        public const string ClientIdKey = "pandadoc:clientid";
-        public const string ClientSecretKey = "pandadoc:clientsecret";
-
-        public const string EnvironmentClientIdKey = "PANDADOC_CLIENTID";
-        public const string EnvironmentClientSecretKey = "PANDADOC_CLIENTSECRET";
-
         private string clientId;
         private string clientSecret;
-        private Uri baseUri;
+        private Uri apiUri;
+        private Uri authUri;
 
-        public PandaDocHttpClientSettings(string clientId = null, string clientSecret = null, Uri baseUri = null)
+        public PandaDocHttpClientSettings(string clientId = null, string clientSecret = null, Uri apiUrl = null, Uri authUri = null)
         {
-            BaseUri = baseUri ?? new Uri("https://app.pandadoc.com");
+            AuthUri = authUri ?? new Uri("https://app.pandadoc.com");
+            ApiUri = apiUrl ?? new Uri("https://api.pandadoc.com");
 
-            var environmentClientId = Environment.GetEnvironmentVariable(EnvironmentClientIdKey);
-            var environmentClientSecret = Environment.GetEnvironmentVariable(EnvironmentClientSecretKey);
-
-            if (!string.IsNullOrEmpty(environmentClientId) && !string.IsNullOrEmpty(environmentClientSecret))
-            {
-                ClientId = environmentClientId;
-                ClientSecret = environmentClientSecret;
-            }
-            else if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
-            {
-                ClientId = clientId;
-                ClientSecret = clientSecret;
-            }
-            else
-            {
-                ClientId = ConfigurationManager.AppSettings[ClientIdKey];
-                ClientSecret = ConfigurationManager.AppSettings[ClientSecretKey];
-            }
+            ClientId = clientId ?? ConfigurationManager.AppSettings["pandadoc:clientid"];
+            ClientSecret = clientSecret ?? ConfigurationManager.AppSettings["pandadoc:clientsecret"]; ;
         }
 
         public string ClientId
@@ -59,13 +39,23 @@ namespace PandaDoc
             }
         }
 
-        public Uri BaseUri
+        public Uri ApiUri
         {
-            get { return baseUri; }
+            get { return apiUri; }
             private set
             {
                 if (value == null) throw new ArgumentNullException("value");
-                baseUri = value;
+                apiUri = value;
+            }
+        }
+
+        public Uri AuthUri
+        {
+            get { return authUri; }
+            private set
+            {
+                if (value == null) throw new ArgumentNullException("value");
+                authUri = value;
             }
         }
     }

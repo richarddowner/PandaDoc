@@ -26,7 +26,7 @@ namespace PandaDoc.Tests
         public void SetSettings()
         {
             var settings = new PandaDocHttpClientSettings();
-            
+
             var client = new PandaDocHttpClient(settings)
             {
                 Settings = new PandaDocHttpClientSettings()
@@ -39,12 +39,12 @@ namespace PandaDoc.Tests
         public void SetHttpClient()
         {
             var settings = new PandaDocHttpClientSettings();
-            
+
             var client = new PandaDocHttpClient(settings)
             {
                 HttpClient = new HttpClient()
             };
-            
+
             Assert.NotNull(client.HttpClient);
         }
 
@@ -52,12 +52,12 @@ namespace PandaDoc.Tests
         public void SetJsonFormatter()
         {
             var settings = new PandaDocHttpClientSettings();
-            
+
             var client = new PandaDocHttpClient(settings)
             {
                 JsonFormatter = new JsonMediaTypeFormatter()
             };
-            
+
             Assert.NotNull(client.JsonFormatter);
         }
 
@@ -68,7 +68,7 @@ namespace PandaDoc.Tests
 
             var client = new PandaDocHttpClient(settings)
             {
-                BearerToken = new BearerToken
+                BearerToken = new PandaDocBearerToken
                 {
                     AccessToken = "TestAccessToken",
                     RefreshToken = "TestRefreshToken",
@@ -84,29 +84,32 @@ namespace PandaDoc.Tests
             var settings = new PandaDocHttpClientSettings();
             var client = new PandaDocHttpClient(settings);
             Assert.Throws<ArgumentNullException>(() => client.BearerToken = null);
+            Assert.Throws<ArgumentNullException>(() => client.SetBearerToken(null));
         }
 
-        [Test, Ignore("Test hits the PandaDoc API")]
+        [Test]
         public async void Login()
         {
-            var settings = new PandaDocHttpClientSettings
-            (
-                clientId: "YOUR_CLIENT_ID_HERE",
-                clientSecret: "YOUR_CLIENT_SECRET_HERE"
-            );
+            using (var client = new PandaDocHttpClient())
+            {
+                PandaDocHttpResponse<PandaDocBearerToken> bearerToken = await client.Login(username: Username, password: Password);
 
-            var client = new PandaDocHttpClient(settings);
+                Assert.NotNull(bearerToken);
+                Assert.NotNull(bearerToken.Value);
+                Assert.NotNull(bearerToken.Value.AccessToken);
+                Assert.NotNull(bearerToken.Value.RefreshToken);
+            }
+        }
 
-            PandaDocHttpResponse<BearerToken> login = await client.Login
-            (
-                username: "YOUR_EMAIL_HERE@YOU.COM", 
-                password: "YOUR_PASSWORD"
-            );
+        [Test]
+        public async void GetDocuments()
+        {
+            using (PandaDocHttpClient client = await EnsureLoggedIn())
+            {
+                PandaDocHttpResponse documents = await client.Documents();
 
-            Assert.NotNull(login);
-            Assert.NotNull(login.Value);
-            Assert.NotNull(login.Value.AccessToken);
-            Assert.NotNull(login.Value.RefreshToken);
+                Assert.NotNull(documents);
+            }
         }
     }
 }

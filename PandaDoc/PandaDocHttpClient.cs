@@ -3,21 +3,33 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using PandaDoc.Models;
 
 namespace PandaDoc
 {
-    public class PandaDocHttpClient
+    public class PandaDocHttpClient : IDisposable
     {
         private PandaDocHttpClientSettings settings;
         private HttpClient httpClient;
         private JsonMediaTypeFormatter jsonFormatter;
-        private BearerToken bearerToken;
+        private PandaDocBearerToken bearerToken;
+
+        public PandaDocHttpClient()
+            : this(new PandaDocHttpClientSettings())
+        {
+        }
 
         public PandaDocHttpClient(PandaDocHttpClientSettings settings)
         {
             Settings = settings;
             HttpClient = new HttpClient();
             JsonFormatter = new JsonMediaTypeFormatter();
+        }
+
+        public void Dispose()
+        {
+            httpClient.Dispose();
         }
 
         public PandaDocHttpClientSettings Settings
@@ -50,7 +62,7 @@ namespace PandaDoc
             }
         }
 
-        public BearerToken BearerToken
+        public PandaDocBearerToken BearerToken
         {
             get { return bearerToken; }
             set
@@ -63,7 +75,12 @@ namespace PandaDoc
             }
         }
 
-        public async Task<PandaDocHttpResponse<BearerToken>> Login(string username, string password)
+        public void SetBearerToken(PandaDocBearerToken value)
+        {
+            BearerToken = value;
+        }
+
+        public async Task<PandaDocHttpResponse<PandaDocBearerToken>> Login(string username, string password)
         {
             if (username == null) throw new ArgumentNullException("username");
             if (password == null) throw new ArgumentNullException("password");
@@ -79,9 +96,18 @@ namespace PandaDoc
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.BaseUri + "/oauth2/access_token", content);
+            HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.AuthUri + "/oauth2/access_token", content);
 
-            PandaDocHttpResponse<BearerToken> response = await httpResponse.ToPandaDocResponseAsync<BearerToken>();
+            PandaDocHttpResponse<PandaDocBearerToken> response = await httpResponse.ToPandaDocResponseAsync<PandaDocBearerToken>();
+
+            return response;
+        }
+
+        public async Task<PandaDocHttpResponse<Documents>> Documents()
+        {
+            HttpResponseMessage httpResponse = await httpClient.GetAsync(settings.ApiUri + "/public/v1/documents");
+
+            PandaDocHttpResponse<Documents> response = await httpResponse.ToPandaDocResponseAsync<Documents>();
 
             return response;
         }
