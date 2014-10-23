@@ -14,8 +14,9 @@ namespace PandaDoc
 
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
-            var response = new PandaDocHttpResponse()
+            var response = new PandaDocHttpResponse
             {
+                Content = responseContent,
                 IsSuccessStatusCode = httpResponse.IsSuccessStatusCode,
                 StatusCode = httpResponse.StatusCode,
                 Headers = httpResponse.Headers,
