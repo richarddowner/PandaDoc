@@ -9,6 +9,7 @@ namespace PandaDoc.Tests
     {
         protected readonly string Username = ConfigurationManager.AppSettings["pandadoc:username"];
         protected readonly string Password = ConfigurationManager.AppSettings["pandadoc:password"];
+        protected readonly string SampleDocUrl = ConfigurationManager.AppSettings["pandadoc:sampledocurl"];
 
         protected async Task<PandaDocHttpClient> EnsureLoggedIn()
         {

@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using NUnit.Framework;
+using PandaDoc.Models.CreateDocument;
+using PandaDoc.Models.GetDocuments;
 
 namespace PandaDoc.Tests
 {
@@ -106,9 +109,42 @@ namespace PandaDoc.Tests
         {
             using (PandaDocHttpClient client = await EnsureLoggedIn())
             {
-                PandaDocHttpResponse documents = await client.Documents();
+                PandaDocHttpResponse<GetDocumentsResponse> response = await client.Documents();
 
-                Assert.NotNull(documents);
+                Assert.NotNull(response);
+                Assert.NotNull(response.Value);
+            }
+        }
+
+        [Test]
+        public async void CreateDocument()
+        {
+            using (PandaDocHttpClient client = await EnsureLoggedIn())
+            {
+                var request = new CreateDocumentRequest
+                {
+                    Name = "Sample Document",
+                    Url = SampleDocUrl,
+                    Recipients = new[]
+                    {
+                        new Models.CreateDocument.Recipient
+                        {
+                            Email = "jake.net@gmail.com",
+                            FirstName = "Jake",
+                            LastName = "Scott",
+                            Role = "u1",
+                        }
+                    },
+                    Fields = new Dictionary<string, Field>
+                    {
+                        {"optId", new Field {Title = "Field 1"}}
+                    }
+                };
+
+                PandaDocHttpResponse<CreateDocumentResponse> response = await client.CreateDocument(request);
+
+                Assert.NotNull(response);
+                Assert.NotNull(response.Value);
             }
         }
     }

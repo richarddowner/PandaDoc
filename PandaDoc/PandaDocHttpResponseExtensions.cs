@@ -62,12 +62,21 @@ namespace PandaDoc
         {
             var data = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(responseContent);
 
-            if (data.ContainsKey("type") && data.ContainsKey("details"))
+            if (data.ContainsKey("type"))
             {
                 var errorType = data["type"].ToString();
-                var errorDetails = data["details"].ToString();
-                
-                response.Errors.Add(errorType, errorDetails);    
+
+                if (data.ContainsKey("details"))
+                {
+                    var errorDetails = data["details"].ToString();
+                    response.Errors.Add(errorType, errorDetails);    
+                }
+
+                if (data.ContainsKey("detail"))
+                {
+                    var detail = data["detail"].ToString();
+                    response.Errors.Add(errorType, detail);
+                }
             }
         }
     }

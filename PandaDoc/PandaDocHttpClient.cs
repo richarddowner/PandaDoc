@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using PandaDoc.Models;
+using PandaDoc.Models.CreateDocument;
+using PandaDoc.Models.GetDocuments;
 
 namespace PandaDoc
 {
@@ -96,18 +96,29 @@ namespace PandaDoc
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.AuthUri + "/oauth2/access_token", content);
+            HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.AuthUri + "oauth2/access_token", content);
 
             PandaDocHttpResponse<PandaDocBearerToken> response = await httpResponse.ToPandaDocResponseAsync<PandaDocBearerToken>();
 
             return response;
         }
 
-        public async Task<PandaDocHttpResponse<Documents>> Documents()
+        public async Task<PandaDocHttpResponse<GetDocumentsResponse>> Documents()
         {
-            HttpResponseMessage httpResponse = await httpClient.GetAsync(settings.ApiUri + "/public/v1/documents");
+            HttpResponseMessage httpResponse = await httpClient.GetAsync(settings.ApiUri + "public/v1/documents");
 
-            PandaDocHttpResponse<Documents> response = await httpResponse.ToPandaDocResponseAsync<Documents>();
+            PandaDocHttpResponse<GetDocumentsResponse> response = await httpResponse.ToPandaDocResponseAsync<GetDocumentsResponse>();
+
+            return response;
+        }
+
+        public async Task<PandaDocHttpResponse<CreateDocumentResponse>> CreateDocument(CreateDocumentRequest request)
+        {
+            HttpContent httpContent = new ObjectContent<CreateDocumentRequest>(request, JsonFormatter);
+            
+            HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.ApiUri + "public/v1/documents", httpContent);
+
+            PandaDocHttpResponse<CreateDocumentResponse> response = await httpResponse.ToPandaDocResponseAsync<CreateDocumentResponse>();
 
             return response;
         }
