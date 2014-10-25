@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
+    <Compile Include="PandaDocHttpResponseAssertions.cs" />
     <Compile Include="PandaDocBearerTokenTests.cs" />
     <Compile Include="PandaDocHttpClientSettingsTests.cs" />
     <Compile Include="PandaDocHttpClientTests.cs" />

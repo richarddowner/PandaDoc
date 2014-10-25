@@ -3,6 +3,13 @@ using Newtonsoft.Json;
 
 namespace PandaDoc.Models.GetDocument
 {
+    public enum DocumentStatus
+    {
+        Uploaded,
+        Draft,
+        Sent,
+    }
+
     public class GetDocumentResponse
     {
         [JsonProperty("uuid")]
@@ -22,6 +29,27 @@ namespace PandaDoc.Models.GetDocument
 
         [JsonProperty("date_modified")]
         public DateTime DateModified { get; set; }
+
+        public DocumentStatus DocumentStatus
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case "document.uploaded":
+                        return DocumentStatus.Uploaded;
+
+                    case "document.draft":
+                        return DocumentStatus.Draft;
+
+                    case "document.sent":
+                        return DocumentStatus.Sent;
+                    
+                    default:
+                        throw new ArgumentOutOfRangeException(string.Format("Status was '{0}'. This is a bug and a new DocumentStatus should be added", Status));
+                }
+            }
+        }
     }
 
     public class Recipient

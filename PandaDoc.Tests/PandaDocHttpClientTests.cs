@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using PandaDoc.Models.CreateDocument;
 using PandaDoc.Models.GetDocument;
@@ -99,11 +101,10 @@ namespace PandaDoc.Tests
             {
                 PandaDocHttpResponse<PandaDocBearerToken> response = await client.Login(username: Username, password: Password);
 
-                Assert.NotNull(response);
-                Assert.NotNull(response.Value);
+                response.AssertOk();
+
                 Assert.NotNull(response.Value.AccessToken);
                 Assert.NotNull(response.Value.RefreshToken);
-                Assert.IsTrue(response.IsSuccessStatusCode);
             }
         }
 
@@ -113,10 +114,7 @@ namespace PandaDoc.Tests
             using (PandaDocHttpClient client = await EnsureLoggedIn())
             {
                 PandaDocHttpResponse<GetDocumentsResponse> response = await client.GetDocuments();
-
-                Assert.NotNull(response);
-                Assert.NotNull(response.Value);
-                Assert.IsTrue(response.IsSuccessStatusCode);
+                response.AssertOk();
             }
         }
 
@@ -129,9 +127,20 @@ namespace PandaDoc.Tests
 
                 PandaDocHttpResponse<CreateDocumentResponse> response = await client.CreateDocument(request);
 
-                Assert.NotNull(response);
-                Assert.NotNull(response.Value);
-                Assert.IsTrue(response.IsSuccessStatusCode);
+                response.AssertOk();
+            }
+        }
+
+        [Test]
+        public async void DeleteDocument()
+        {
+            using (PandaDocHttpClient client = await EnsureLoggedIn())
+            {
+                string uuid = "FRkUcECJzFtCBTSFugsaF5";
+
+                PandaDocHttpResponse response = await client.DeleteDocument(uuid);
+
+                response.AssertOk();
             }
         }
 
@@ -144,10 +153,8 @@ namespace PandaDoc.Tests
                 var createResponse = await client.CreateDocument(createRequest);
 
                 PandaDocHttpResponse<GetDocumentResponse> response = await client.GetDocument(createResponse.Value.Uuid);
-                
-                Assert.NotNull(response);
-                Assert.NotNull(response.Value);
-                Assert.IsTrue(response.IsSuccessStatusCode);
+
+                response.AssertOk();
             }
         }
 
@@ -159,16 +166,36 @@ namespace PandaDoc.Tests
                 var createRequest = CreateDocumentRequest();
                 var createResponse = await client.CreateDocument(createRequest);
 
+                // we have to wait for the document to move from document.uploaded to document.draft before you can send it.
+                var attempts = 0;
+                while (true)
+                {
+                    var getResponse = await client.GetDocument(createResponse.Value.Uuid);
+
+                    if (getResponse.Value.DocumentStatus == DocumentStatus.Draft)
+                    {
+                        Console.WriteLine("Document has moved to draft");
+                        break;
+                    }
+
+                    Console.WriteLine("Document status was {0}", getResponse.Value.Status);
+                    await Task.Delay(500);
+                    attempts++;
+
+                    if (attempts == 5)
+                    {
+                        Assert.Fail();
+                    }
+                }
+
                 var sendRequest = new SendDocumentRequest
                 {
-                    Message = "plz sign doge."
+                    Message = "Please sign this document"
                 };
 
                 PandaDocHttpResponse<SendDocumentResponse> response = await client.SendDocument(createResponse.Value.Uuid, sendRequest);
-                
-                Assert.NotNull(response);
-                Assert.NotNull(response.Value);
-                Assert.IsTrue(response.IsSuccessStatusCode);
+
+                response.AssertOk();
             }
         }
 

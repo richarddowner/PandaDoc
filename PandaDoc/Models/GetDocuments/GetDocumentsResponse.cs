@@ -168,7 +168,7 @@ namespace PandaDoc.Models.GetDocuments
         public int Type { get; set; }
 
         [JsonProperty("parent")]
-        public int Parent { get; set; }
+        public int? Parent { get; set; }
 
         [JsonProperty("uuid")]
         public string Uuid { get; set; }

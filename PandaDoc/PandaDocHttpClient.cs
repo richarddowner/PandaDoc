@@ -94,7 +94,7 @@ namespace PandaDoc
                 {"password", password},
                 {"client_id", settings.ClientId},
                 {"client_secret", settings.ClientSecret},
-                {"scope", "read+write"}
+                {"scope", "read write read+write"}
             };
 
             var content = new FormUrlEncodedContent(values);
@@ -142,6 +142,15 @@ namespace PandaDoc
             HttpResponseMessage httpResponse = await httpClient.PostAsync(settings.ApiUri + "public/v1/documents/" + uuid + "/send", httpContent);
 
             PandaDocHttpResponse<SendDocumentResponse> response = await httpResponse.ToPandaDocResponseAsync<SendDocumentResponse>();
+
+            return response;
+        }
+
+        public async Task<PandaDocHttpResponse> DeleteDocument(string uuid)
+        {
+            HttpResponseMessage httpResponse = await httpClient.DeleteAsync(settings.ApiUri + "public/v1/documents/" + uuid);
+
+            PandaDocHttpResponse response = await httpResponse.ToPandaDocResponseAsync();
 
             return response;
         }
