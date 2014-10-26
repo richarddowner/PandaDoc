@@ -9,6 +9,7 @@ using PandaDoc.Models.CreateDocument;
 using PandaDoc.Models.GetDocument;
 using PandaDoc.Models.GetDocuments;
 using PandaDoc.Models.SendDocument;
+using Recipient = PandaDoc.Models.GetDocument.Recipient;
 
 namespace PandaDoc.Tests
 {
@@ -149,12 +150,21 @@ namespace PandaDoc.Tests
         {
             using (PandaDocHttpClient client = await EnsureLoggedIn())
             {
-                var createRequest = CreateDocumentRequest();
-                var createResponse = await client.CreateDocument(createRequest);
+                //var createRequest = CreateDocumentRequest();
+                //var createResponse = await client.CreateDocument(createRequest);
+                //var uuid = createResponse.Value.Uuid;
+                var uuid = "9x5fr622ME6rpcG277Nx8C";
 
-                PandaDocHttpResponse<GetDocumentResponse> response = await client.GetDocument(createResponse.Value.Uuid);
+                PandaDocHttpResponse<GetDocumentResponse> response = await client.GetDocument(uuid);
 
                 response.AssertOk();
+
+                Console.WriteLine("Document '{0}' has status '{1}'", response.Value.Uuid, response.Value.Status);
+
+                foreach (Recipient recipient in response.Value.Recipients)
+                {
+                    Console.WriteLine("Recipient '{0} {1}' completed: {2}", recipient.FirstName, recipient.LastName, recipient.HasCompleted);
+                }
             }
         }
 
@@ -166,6 +176,8 @@ namespace PandaDoc.Tests
                 var createRequest = CreateDocumentRequest();
                 var createResponse = await client.CreateDocument(createRequest);
 
+                Console.WriteLine("Document '{0}' was uploaded", createResponse.Value.Uuid);
+
                 // we have to wait for the document to move from document.uploaded to document.draft before you can send it.
                 var attempts = 0;
                 while (true)
@@ -174,12 +186,11 @@ namespace PandaDoc.Tests
 
                     if (getResponse.Value.DocumentStatus == DocumentStatus.Draft)
                     {
-                        Console.WriteLine("Document has moved to draft");
+                        Console.WriteLine("Document '{0}' has moved to draft", createResponse.Value.Uuid);
                         break;
                     }
 
-                    Console.WriteLine("Document status was {0}", getResponse.Value.Status);
-                    await Task.Delay(500);
+                    await Task.Delay(1000);
                     attempts++;
 
                     if (attempts == 5)
@@ -196,6 +207,8 @@ namespace PandaDoc.Tests
                 PandaDocHttpResponse<SendDocumentResponse> response = await client.SendDocument(createResponse.Value.Uuid, sendRequest);
 
                 response.AssertOk();
+
+                Console.WriteLine("Document '{0}' was sent", response.Value.Uuid);
             }
         }
 
