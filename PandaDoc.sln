@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaDoc.Tests", "PandaDoc.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaDoc", "PandaDoc\PandaDoc.csproj", "{4A812E8A-F401-45C7-BEB7-5F1184A49D24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PandaDoc.WebhookTests", "PandaDoc.WebhookTests\PandaDoc.WebhookTests.csproj", "{A4E350DC-BBD4-4394-AD9D-BB27A6AC74AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4A812E8A-F401-45C7-BEB7-5F1184A49D24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A812E8A-F401-45C7-BEB7-5F1184A49D24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A812E8A-F401-45C7-BEB7-5F1184A49D24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4E350DC-BBD4-4394-AD9D-BB27A6AC74AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4E350DC-BBD4-4394-AD9D-BB27A6AC74AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4E350DC-BBD4-4394-AD9D-BB27A6AC74AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4E350DC-BBD4-4394-AD9D-BB27A6AC74AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
