@@ -112,7 +112,26 @@ Host: 3730a8f6.ngrok.com
 Content-Type: application/json
 Cache-Control: no-cache
 
-[ { "type": "document.completed", "data": { "id": "DOCUMENT_UUID" }, "triggered_at": "2014-06-15T10:00:00.000Z" }, { "type": "document.error", "data": { "id": "DOCUMENT_UUID" }, "triggered_at": "2014-06-15T10:00:00.000Z" } ]
+{
+    "document": {
+        "status": "document.draft",
+        "name": "Sample Document",
+        "recipients": [
+            {
+                "first_name": "Jake",
+                "last_name": "Jake",
+                "email": "jake.net@gmail.com",
+                "recipient_type": "CC",
+                "has_completed": false,
+                "id": "TvCqQ9G2wrXQxG9aLWEZ5g"
+            }
+        ],
+        "date_modified": "2014-10-27T06:47:48.888834Z",
+        "date_created": "2014-10-27T06:47:48.888809Z",
+        "id": "yA6JdcNZemdYbf73Env9jk"
+    },
+    "event": "created"
+}
 ````
 
 Open up the ngrok local web interface http://localhost:4040/ and you should see some successful inbound requests!
@@ -122,9 +141,4 @@ In the PandaDoc.WebhookTests console window you should see the following:
 ````
 Listening on http://127.0.0.1:9000/
 yA6JdcNZemdYbf73Env9jk
-X6EcWqAPojm2qZrxWmKRVR
-yA6JdcNZemdYbf73Env9jk
-yA6JdcNZemdYbf73Env9jk
-yA6JdcNZemdYbf73Env9jk
-
 ````
