@@ -24,12 +24,12 @@ var login = await client.Login(username: Username, password: Password);
 client.SetBearerToken(login.Value);
 ````
 
-### Get Documents
+## Get Documents
 ````csharp
 PandaDocHttpResponse<GetDocumentsResponse> response = await client.GetDocuments();
 ````
 
-### Create a Document
+## Create Document
 ````csharp
 var request = new CreateDocumentRequest
 {
@@ -54,12 +54,12 @@ var request = new CreateDocumentRequest
 PandaDocHttpResponse<CreateDocumentResponse> response = await client.CreateDocument(request);
 ````
 
-### Get a Document
+## Get Document
 ````csharp
 PandaDocHttpResponse<GetDocumentResponse> response = await client.GetDocument(uuid);
 ````
 
-#### Send a Document
+## Send Document
 ````csharp
 var sendRequest = new SendDocumentRequest
 {
