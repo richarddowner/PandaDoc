@@ -121,8 +121,10 @@ In the PandaDoc.WebhookTests console window you should see the following:
 
 ````
 Listening on http://127.0.0.1:9000/
-Notification: DOCUMENT_UUID
-Notification: DOCUMENT_UUID
-Notification: DOCUMENT_UUID
-Notification: DOCUMENT_UUID
+yA6JdcNZemdYbf73Env9jk
+X6EcWqAPojm2qZrxWmKRVR
+yA6JdcNZemdYbf73Env9jk
+yA6JdcNZemdYbf73Env9jk
+yA6JdcNZemdYbf73Env9jk
+
 ````
