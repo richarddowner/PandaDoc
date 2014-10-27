@@ -16,7 +16,7 @@ namespace PandaDoc.Tests
             var settings = new PandaDocHttpClientSettings();
             var client = new PandaDocHttpClient(settings);
 
-            var login = await client.Login(username: Username, password: Password);
+            PandaDocHttpResponse<PandaDocBearerToken> login = await client.Login(username: Username, password: Password);
 
             client.SetBearerToken(login.Value);
 
