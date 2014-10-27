@@ -1,6 +1,6 @@
 ﻿# PandaDoc .NET 
 
-PandaDoc is a web and mobile application which helps you to send, sign and track documents online. You can learn more about the application at our web site (https://www.pandadoc.com/).
+PandaDoc is a web and mobile application which helps you to send, sign and track documents online. You can learn more about the application at the web site (https://www.pandadoc.com/).
 
 With PandaDoc's programmable API you can send a document for signing straight from your backend system, or embed a document in your web site to request a signature from your clients.
 
