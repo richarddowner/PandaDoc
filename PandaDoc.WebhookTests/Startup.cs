@@ -12,7 +12,7 @@ namespace PandaDoc.WebhookTests
 
             app.Run(async context =>
             {
-                var notification = await context.ReadBodyAsJsonAsync<Notification>() ?? new Notification();
+                Notification notification = await context.ReadBodyAsJsonAsync<Notification>();
 
                 Console.WriteLine(notification.Document.Id);
 
