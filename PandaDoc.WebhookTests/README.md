@@ -1,4 +1,4 @@
-﻿ #Webhook Test Server
+# Webhook Test Server
  
 In an elevated command prompt run the following command:
 
