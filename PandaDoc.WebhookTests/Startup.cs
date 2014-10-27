@@ -1,6 +1,5 @@
-﻿using Owin;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Owin;
 using PandaDoc.Models.Webhooks;
 
 namespace PandaDoc.WebhookTests
@@ -13,14 +12,11 @@ namespace PandaDoc.WebhookTests
 
             app.Run(async context =>
             {
-                var notifications = await context.ReadBodyAsJsonAsync<List<Notification>>() ?? new List<Notification>();
+                var notification = await context.ReadBodyAsJsonAsync<Notification>() ?? new Notification();
 
-                foreach (var notification in notifications)
-                {
-                    Console.WriteLine("Notification: {0}", notification.Data.Id);
-                }
+                Console.WriteLine(notification.Document.Id);
 
-                await context.ReturnJsonAsync(notifications);
+                await context.ReturnJsonAsync(notification);
             });
         }
     }

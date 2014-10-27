@@ -57,6 +57,8 @@
     <Compile Include="Models\GetDocument\GetDocumentResponse.cs" />
     <Compile Include="Models\SendDocument\SendDocumentRequest.cs" />
     <Compile Include="Models\Webhooks\Notification.cs" />
+    <Compile Include="Models\Webhooks\Document.cs" />
+    <Compile Include="Models\Webhooks\Recipient.cs" />
     <Compile Include="PandaDocBearerToken.cs" />
     <Compile Include="PandaDocHttpResponseExtensions.cs" />
     <Compile Include="PandaDocHttpClient.cs" />
