@@ -5,7 +5,7 @@ namespace PandaDoc.WebhookTests
 {
     public class Program
     {
-        private const string url = "http://localhost:9000";
+        private const string url = "http://127.0.0.1:9000/";
 
         public static void Main()
         {
