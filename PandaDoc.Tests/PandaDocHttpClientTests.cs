@@ -95,7 +95,7 @@ namespace PandaDoc.Tests
         }
 
         [Test]
-        public async void Login()
+        public async void LoginAsync()
         {
             using (var client = new PandaDocHttpClient())
             {
@@ -109,7 +109,21 @@ namespace PandaDoc.Tests
         }
 
         [Test]
-        public async void GetDocuments()
+        public void Login()
+        {
+            using (var client = new PandaDocHttpClient())
+            {
+                var response = client.Login(username: Username, password: Password).Result;
+
+                response.AssertOk();
+
+                Assert.NotNull(response.Value.AccessToken);
+                Assert.NotNull(response.Value.RefreshToken);
+            }
+        }
+
+        [Test]
+        public async void GetDocumentsAsync()
         {
             using (PandaDocHttpClient client = await EnsureLoggedIn())
             {
@@ -119,7 +133,17 @@ namespace PandaDoc.Tests
         }
 
         [Test]
-        public async void CreateDocument()
+        public void GetDocuments()
+        {
+            using (PandaDocHttpClient client = EnsureLoggedIn().Result)
+            {
+                PandaDocHttpResponse<GetDocumentsResponse> response = client.GetDocuments().Result;
+                response.AssertOk();
+            }
+        }
+
+        [Test]
+        public async void CreateDocumentAsync()
         {
             using (PandaDocHttpClient client = await EnsureLoggedIn())
             {
@@ -132,6 +156,19 @@ namespace PandaDoc.Tests
         }
 
         [Test]
+        public void CreateDocument()
+        {
+            using (PandaDocHttpClient client = EnsureLoggedIn().Result)
+            {
+                CreateDocumentRequest request = CreateDocumentRequest();
+
+                PandaDocHttpResponse<CreateDocumentResponse> response = client.CreateDocument(request).Result;
+
+                response.AssertOk();
+            }
+        }
+
+        [Test, Ignore("DELETE not supported yet")]
         public async void DeleteDocument()
         {
             using (PandaDocHttpClient client = await EnsureLoggedIn())
