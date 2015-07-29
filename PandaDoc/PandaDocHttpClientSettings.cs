@@ -16,7 +16,7 @@ namespace PandaDoc
             ApiUri = apiUrl ?? new Uri("https://api.pandadoc.com");
 
             ClientId = clientId ?? ConfigurationManager.AppSettings["pandadoc:clientid"];
-            ClientSecret = clientSecret ?? ConfigurationManager.AppSettings["pandadoc:clientsecret"]; ;
+            ClientSecret = clientSecret ?? ConfigurationManager.AppSettings["pandadoc:clientsecret"];
         }
 
         public string ClientId
